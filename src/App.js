@@ -1,27 +1,29 @@
-import React, {useState} from "react";
-import './App.css'
+import React, { useState } from "react";
+import './App.css';
+import TodoItem from './TodoItem';
 
 function App() {
-  // Component Code - without importing from different component files.
-  
-    const [todos, setTodos] = useState([]);
-    const [inputValue, setInputValue] = useState('')
-  // Creating two variables, the 'useState' hook is used to manage the state.
-  
-    const addTodo = () => {
-      if (inputValue.trim() !== '') {
-        setTodos([...todos, inputValue]);
-        setInputValue('');
-      }
-    };
-  // Adding a New todo, this function is called then the Add button will be clicked.
+  const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
-    const removeTodo = (index) => {
-      const newTodos = todos.filter((_, i) => i !== index); 
-      setTodos(newTodos);
-    };
-  // Removing a New todo, the functions will be called when the remove button is clicked for the specific todo item.
-  
+  const addTodo = () => {
+    if (inputValue.trim() !== '') {
+      setTodos([...todos, inputValue]);
+      setInputValue('');
+    }
+  };
+
+  const removeTodo = (index) => {
+    const newTodos = todos.filter((_, i) => i !== index);
+    setTodos(newTodos);
+  };
+
+  const editTodo = (index, editedValue) => {
+    const newTodos = [...todos];
+    newTodos[index] = editedValue;
+    setTodos(newTodos);
+  };
+
   return (
     <div className="App">
       <h1>Todo List</h1>
@@ -42,17 +44,16 @@ function App() {
       <div>
         {!todos.length && 'No items in your list'}
         {!!todos.length && todos.map((todo, index) => (
-          <div key={index}>
-            {todo}
-            <button onClick={() => removeTodo(index)}>Remove</button>
-          </div>
+          <TodoItem
+            key={index}
+            value={todo}
+            onDelete={() => removeTodo(index)}
+            onEditSave={(editedValue) => editTodo(index, editedValue)} // Pass the index and edited value
+          />
         ))}
       </div>
     </div>
   );
-  // This renders the UI, an Add button to add new tasks, A list of tasks added using the 'todos' state array, Each of the tasks have a remove button that will call the 'removeTodo' function.
-
 }
- 
 
 export default App;
